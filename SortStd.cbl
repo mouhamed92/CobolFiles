@@ -1,0 +1,57 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. SortStd.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+
+            SELECT STUDENTFILE ASSIGN TO
+                "C:/work space/Cobol path/labs/Files/STUDENTS.DAT"
+             FILE STATUS IS FILE-CHECK-KEY
+              ORGANIZATION IS LINE SEQUENTIAL.
+
+            SELECT SORTEDFILE ASSIGN TO
+            "C:/work space/Cobol path/labs/Files/NEWSTUDENTS.DAT"
+              ORGANIZATION IS LINE SEQUENTIAL.
+
+              SELECT WORKFILE ASSIGN TO "WORK.TMP".
+
+       DATA DIVISION.
+       FILE SECTION.
+       FD STUDENTFILE.
+       01 STUDENTDETAILS  PIC  X(40).
+
+       FD SORTEDFILE.
+       01 SORTEDDETAILS   PIC  X(40).
+
+       SD WORKFILE.
+       01 WORKREC.
+         02 FILLER        PIC 9(7).
+         02 WSTUDENTLNAME PIC X(10).
+         02 WSTUDENTFNAME PIC X(10).
+         02 FILLER        PIC X(9).
+         02 WMAJOR        PIC X(3).
+         02 FILLER        PIC X.
+
+       WORKING-STORAGE SECTION.
+       01  WS-WORK-AREAS.
+         05  FILE-CHECK-KEY   PIC X(2).
+
+
+       PROCEDURE DIVISION.
+
+       0100-READ-STUDENTS.
+
+           OPEN INPUT STUDENTFILE
+
+            SORT WORKFILE ON ASCENDING KEY WMAJOR
+             USING STUDENTFILE GIVING SORTEDFILE
+
+              PERFORM 0900-END-PROGRAM.
+
+       0100-END.
+
+       0900-END-PROGRAM.
+           CLOSE STUDENTFILE.
+           STOP RUN.
+
+       END PROGRAM SortStd.
